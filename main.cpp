@@ -3,8 +3,8 @@ using namespace std;
 
 int main()
 {
-    double b;
-    get_num(b);
+    int b;
+    get_num(b, "integer number");
     cout << b;
     return 0;
 }
