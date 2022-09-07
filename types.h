@@ -16,6 +16,7 @@ struct Node
 {
     int          line;
     struct Node* next;
+    struct Item* head;
 };
 typedef struct Node Node;
 
@@ -27,13 +28,12 @@ struct Matrix
 };
 typedef struct Matrix Matrix;
 
-int get_num(int &a, const char* content)
-{
-    std::cout << "Enter " << content << ": " << std::endl;
-    std::cin >> a;
-    if(!std::cin.good())
-        return 0;
-    return 1;
-}
+int get_num(int &a, const char* content);
+
+Node* create_node(int line);
+Item* create_line(int n, int line);
+
+Matrix* create_matrix();
+void fill_matrix(Matrix* matrix);
 
 #endif
