@@ -8,6 +8,7 @@ int main(){                               /// обработка исключе�
 
     Matrix* matrix = create_matrix();
     fill_matrix(matrix);
+    print_matrix(matrix);
     return 0;
 }
 
@@ -134,4 +135,22 @@ void add_node(Node* head, Node* node){
     while(ptr->next != nullptr)
         ptr = ptr->next;
     ptr->next = node;
+}
+
+void print_matrix(Matrix* matrix){
+    Node* ptr = matrix->head;
+    while(ptr != nullptr){
+        std::cout << "Line " << ptr->line << ":\t";
+        print_line(ptr->head);
+        ptr = ptr->next;
+        std::cout << std::endl;
+    }
+}
+
+void print_line(Item* head){
+    Item* ptr = head;
+    while(ptr != nullptr){
+        std::cout << "[" << ptr->j << "]: " << ptr->value << "\t";
+        ptr = ptr->next;
+    }
 }
