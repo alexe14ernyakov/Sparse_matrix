@@ -1,14 +1,12 @@
-#include <iostream>
 #include "types.h"
 
 int main(){                               /// обработка исключений (память)
-    int a;
-    get_int(a);
-    std::cout << a << std::endl;
-
     Matrix* matrix = create_matrix();
     fill_matrix(matrix);
     print_matrix(matrix);
+    std::cout << std::endl;
+    Matrix* new_matrix = copy_matrix(matrix);
+    print_matrix(new_matrix);
     return 0;
 }
 
@@ -64,8 +62,11 @@ void fill_matrix(Matrix* matrix){
 
         std::cout << "Enter number of column: ";
         get_int(j);
-        if(find_cell(matrix->head, i, j))
+        if(find_cell(matrix->head, i, j)){
+            std::cout << "Indexes repeat..." << std::endl;
             continue;
+        }
+
 
         std::cout << "Enter value of cell: ";
         get_int(value);
@@ -73,6 +74,7 @@ void fill_matrix(Matrix* matrix){
         if (matrix->head == nullptr) {
             matrix->head = create_node(i);
             matrix->head->head = create_item(i, j, value);
+            matrix->head->amount = 1;
         } else {
             Node *current_node = find_node(matrix->head, i);
             if (current_node != nullptr) {
@@ -82,6 +84,7 @@ void fill_matrix(Matrix* matrix){
                 add_node(matrix->head, create_node(i));
                 Node* node = find_node(matrix->head, i);
                 node->head = create_item(i, j, value);
+                node->amount = 1;
             }
         }
     }
@@ -153,4 +156,20 @@ void print_line(Item* head){
         std::cout << "[" << ptr->j << "]: " << ptr->value << "\t";
         ptr = ptr->next;
     }
+}
+
+Matrix* copy_matrix(Matrix* src){
+    Matrix* new_matrix;
+    new_matrix = new Matrix;
+    new_matrix->head = list_copy(src->head);
+    Node* ptr = new_matrix->head;
+    Node* tmp = src->head;
+    while(ptr != nullptr){
+        ptr->head = list_copy(tmp->head);
+        ptr = ptr->next;
+        tmp = tmp->next;
+    }
+    new_matrix->n = src->n;
+    new_matrix->m = src->m;
+    return new_matrix;
 }

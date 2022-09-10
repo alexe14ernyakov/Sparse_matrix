@@ -1,5 +1,7 @@
 #ifndef LAB1_TYPES_H
 #define LAB1_TYPES_H
+#include <iostream>
+#include <cstring>
 
 struct Item{
     int          value;
@@ -41,5 +43,26 @@ void add_node(Node* head, Node* node);
 
 void print_matrix(Matrix* matrix);
 void print_line(Item* head);
+
+template <typename T>
+T* list_copy(T* head){
+    if(head == nullptr)
+        return nullptr;
+    T* ptr = head;
+    T* tmp;
+    tmp = new T;
+    std::memcpy(tmp, ptr, sizeof(T));
+    T* new_head = tmp;
+    ptr = ptr->next;
+    while(ptr != nullptr){
+        tmp->next = new T;
+        std::memcpy(tmp->next, ptr, sizeof(T));
+        tmp = tmp->next;
+        ptr = ptr->next;
+    }
+    return new_head;
+}
+
+Matrix* copy_matrix(Matrix* src);
 
 #endif
