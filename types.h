@@ -1,39 +1,40 @@
-#ifndef SPARSE_MATRIX_TYPES_H
-#define SPARSE_MATRIX_TYPES_H
+#ifndef LAB1_TYPES_H
+#define LAB1_TYPES_H
 
-#include <iostream>
-//#include <fstream>
-
-struct Item
-{
+struct Item{
     int          value;
+    int          i;
+    int          j;
     struct Item* next;
-    int          number;                       /// Номер элемента в строке
 };
 typedef struct Item Item;
 
-struct Node
-{
+struct Node{
     int          line;
+    int          amount;
+    Item*        head;
     struct Node* next;
-    struct Item* head;
 };
 typedef struct Node Node;
 
-struct Matrix
-{
-    int          m;                            /// Количество строк
-    int          n;                            /// Количество столбцов
-    struct Node* head;
+struct Matrix{
+    int   m;
+    int   n;
+    Node* head;
 };
 typedef struct Matrix Matrix;
 
-int get_num(int &a, const char* content);
-
-Node* create_node(int line);
-Item* create_line(int n, int line);
+int get_int(int &a);
 
 Matrix* create_matrix();
+Node* create_node(int i);
+Item* create_item(int i, int j, int value);
+
 void fill_matrix(Matrix* matrix);
+bool find_cell(Node* node, int i, int j);
+Node* find_node(Node* head, int i);
+Item* find_item(Item* head, int i, int j);
+void add_item(Item* head, Item* item);
+void add_node(Node* head, Node* node);
 
 #endif

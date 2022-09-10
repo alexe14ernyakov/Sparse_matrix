@@ -1,60 +1,29 @@
+#include <iostream>
 #include "types.h"
-using namespace std;
 
-int main()
-{
+int main(){                               /// обработка исключений (память)
+    int a;
+    get_int(a);
+    std::cout << a << std::endl;
+
     Matrix* matrix = create_matrix();
     fill_matrix(matrix);
     return 0;
 }
 
-int get_num(int &a, const char* content)
-{
-    std::cout << "Enter " << content << ": " << std::endl;
+int get_int(int &a){
     std::cin >> a;
-    if(!std::cin.good()){
-        std::cout << "Error! " << std::endl;
-        return  0;
-    }
+    if(!std::cin.good())
+        return 0;
     return 1;
 }
 
-Node* create_node(int line)
-{
-    Node* node = new Node;
-    node->next = nullptr;
-    node->head = nullptr;
-    node->line = line;
-    return node;
-}
-
-Item* create_line(int n, int line)
-{
-    Item* head = new Item;
-    head->next = nullptr;
-    head->number = 1;
-
-    int value;
-    get_num(value, "value");
-    head->value = value;
-
-    Item* ptr = head;
-    for(int i = 1; i < n; i++){
-        ptr = new Item;
-        ptr->number = i+1;
-        ptr->next = nullptr;
-        get_num(value, "value");
-        ptr->value = value;
-        ptr = ptr->next;
-    }
-    return head;
-}
-
-Matrix* create_matrix()
-{
+Matrix* create_matrix(){
     int m, n;
-    get_num(m, "number of lines");
-    get_num(n, "number of columns");
+    std::cout << "Enter number of lines: ";
+    get_int(m);
+    std::cout << "Enter number of columns: ";
+    get_int(n);
     Matrix* matrix;
     matrix = new Matrix;
     matrix->head = nullptr;
@@ -63,16 +32,106 @@ Matrix* create_matrix()
     return matrix;
 }
 
-void fill_matrix(Matrix* matrix)
-{
-    matrix->head = create_node(1);
-    matrix->head->head = create_line(matrix->n, 1);
-    Node* ptr = matrix->head;
-    for(int i = 1; i < matrix->m; i++){
-        ptr = new Node;
-        ptr->next = nullptr;
-        ptr->line = i+1;
-        ptr->head = create_line(matrix->n, i);
+Node* create_node(int i){
+    Node* node;
+    node = new Node;
+    node->line = i;
+    node->next = nullptr;
+    node->head = nullptr;
+    node->amount = 0;
+    return node;
+}
+
+Item* create_item(int i, int j, int value){
+    Item* item;
+    item = new Item;
+    item->i = i;
+    item->j = j;
+    item->value = value;
+    item->next = nullptr;
+    return item;
+}
+
+void fill_matrix(Matrix* matrix){
+    int i, j, value;
+
+    while(true) {
+        std::cout << "Enter number of line: ";
+        get_int(i);
+        if(i == 0)
+            return;
+
+        std::cout << "Enter number of column: ";
+        get_int(j);
+        if(find_cell(matrix->head, i, j))
+            continue;
+
+        std::cout << "Enter value of cell: ";
+        get_int(value);
+
+        if (matrix->head == nullptr) {
+            matrix->head = create_node(i);
+            matrix->head->head = create_item(i, j, value);
+        } else {
+            Node *current_node = find_node(matrix->head, i);
+            if (current_node != nullptr) {
+                current_node->amount++;
+                add_item(current_node->head, create_item(i, j, value));
+            } else {
+                add_node(matrix->head, create_node(i));
+                Node* node = find_node(matrix->head, i);
+                node->head = create_item(i, j, value);
+            }
+        }
+    }
+}
+
+bool find_cell(Node* head, int i, int j){
+    Node* node = find_node(head, i);
+    if(node == nullptr)
+        return false;
+    else{
+        Item* item = find_item(node->head, i, j);
+        if(item != nullptr)
+            return true;
+    }
+    return false;
+}
+
+Node* find_node(Node* head, int i){
+    if(head == nullptr)
+        return nullptr;
+    Node* ptr = head;
+    while(ptr != nullptr){
+        if(ptr->line == i)
+            return ptr;
         ptr = ptr->next;
     }
+    return nullptr;
+}
+
+Item* find_item(Item* head, int i, int j){
+    if(head == nullptr)
+        return nullptr;
+    Item* ptr = head;
+    while(ptr != nullptr){
+        if(ptr->i == i && ptr->j == j)
+            return ptr;
+        ptr = ptr->next;
+    }
+    return nullptr;
+}
+
+void add_item(Item* head, Item* item){
+    Item* ptr = head;
+    while(ptr->next != nullptr)
+        ptr = ptr->next;
+    ptr->next = item;
+}
+
+void add_node(Node* head, Node* node){
+    Node* ptr = head;
+    while(ptr->next != nullptr)
+        ptr = ptr->next;
+    ptr->next = node;
 }
