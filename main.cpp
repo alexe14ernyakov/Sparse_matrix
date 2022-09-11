@@ -55,18 +55,29 @@ void fill_matrix(Matrix* matrix){
     int i, j, value;
 
     while(true) {
+        std::cout << matrix->m << " " << matrix->n << std::endl;
+
         std::cout << "Enter number of line: ";
         get_int(i);
         if(i == 0)
             return;
+        if(i < 0 || i > matrix->m){
+            std::cout << "Incorrect index...\n";
+            continue;
+        }
 
         std::cout << "Enter number of column: ";
         get_int(j);
+        if(j == 0)
+            return;
+        if(j < 0 || j > matrix->n){
+            std::cout << "Incorrect index...\n";
+            continue;
+        }
         if(find_cell(matrix->head, i, j)){
             std::cout << "Indexes repeat..." << std::endl;
             continue;
         }
-
 
         std::cout << "Enter value of cell: ";
         get_int(value);
