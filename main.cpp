@@ -1,6 +1,6 @@
 #include "types.h"
 
-int main(){                               /// обработка исключений (память)
+int main(){
     Matrix* matrix;
     try {
         matrix = create_matrix();
@@ -24,6 +24,7 @@ int main(){                               /// обработка исключе�
     }
     edit_matrix(new_matrix);
     delete_spaces(new_matrix);
+    sort_list(new_matrix);
     print_matrix(new_matrix);
     return 0;
 }
@@ -278,6 +279,27 @@ void delete_spaces(Matrix* matrix){
         else
             ptr = ptr->next;
     }
+}
+
+void sort_list(Matrix* matrix){
+    if(matrix->head == nullptr)
+        return;
+
+    Node* new_head = find_max(matrix->head);
+    Node* ptr = matrix->head;
+    while(ptr->next != new_head)
+        ptr = ptr->next;
+}
+
+Node* find_max(Node* head){
+    Node* max = head;
+    Node* ptr = head;
+    while(ptr != nullptr){
+        if(ptr->next->amount > max->amount)
+            max = ptr->next;
+        ptr = ptr->next;
+    }
+    return max;
 }
 
 void clear_matrix(Matrix* matrix){

@@ -73,6 +73,9 @@ bool criterion_check(Item* item);
 void delete_item(Item* previous_item);
 void delete_spaces(Matrix* matrix);
 
+void sort_list(Matrix* matrix);
+Node* find_max(Node* head);
+
 void clear_matrix(Matrix* matrix);
 
 template <typename T>
