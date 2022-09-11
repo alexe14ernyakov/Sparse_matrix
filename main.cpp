@@ -1,12 +1,29 @@
 #include "types.h"
 
 int main(){                               /// обработка исключений (память)
-    Matrix* matrix = create_matrix();
+    Matrix* matrix;
+    try {
+        matrix = create_matrix();
+    }
+    catch(const std::bad_alloc& ex){
+        std::cout << "Alloc error!";
+        clear_matrix(matrix);
+        return 0;
+    }
     fill_matrix(matrix);
     print_matrix(matrix);
     std::cout << std::endl;
-    Matrix* new_matrix = copy_matrix(matrix);
+    Matrix* new_matrix;
+    try {
+        new_matrix = copy_matrix(matrix);
+    }
+    catch(const std::bad_alloc& ex){
+        std::cout << "Alloc error!";
+        clear_matrix(new_matrix);
+        return 0;
+    }
     edit_matrix(new_matrix);
+    delete_spaces(new_matrix);
     print_matrix(new_matrix);
     return 0;
 }
@@ -185,25 +202,35 @@ Matrix* copy_matrix(Matrix* src){
 }
 
 void edit_matrix(Matrix* matrix){
+    int d;
     Node* ptr = matrix->head;
     while(ptr != nullptr){
-        edit_list(ptr);
+        d = edit_list(ptr);
+        ptr->amount = ptr->amount - d;
         ptr = ptr->next;
     }
 }
 
-void edit_list(Node* node){
+int edit_list(Node* node){
+    int counter = 0;
     while (criterion_check(node->head)){
         Item* trash = node->head;
         node->head = node->head->next;
         delete trash;
+        counter++;
     }
     Item* ptr = node->head;
+    if(ptr == nullptr)
+        return counter;
     while(ptr->next != nullptr){
-        if(criterion_check(ptr->next))
+        if(criterion_check(ptr->next)){
             delete_item(ptr);
-        ptr = ptr->next;
+            counter++;
+        }
+        else
+            ptr = ptr->next;
     }
+    return counter;
 }
 
 bool criterion_check(Item* item){
@@ -227,4 +254,38 @@ void delete_item(Item* previous_item){
     Item* trash = previous_item->next;
     previous_item->next = previous_item->next->next;
     delete trash;
+}
+
+void delete_spaces(Matrix* matrix){
+    if(matrix->head == nullptr)
+        return;
+
+    while(matrix->head->head == nullptr){
+        Node* trash = matrix->head;
+        matrix->head = matrix->head->next;
+        delete trash;
+    }
+
+    Node* ptr = matrix->head;
+    if(ptr == nullptr)
+        return;
+    while(ptr->next != nullptr){
+        if(ptr->next->head == nullptr){
+            Node* trash = ptr->next;
+            ptr->next = ptr->next->next;
+            delete trash;
+        }
+        else
+            ptr = ptr->next;
+    }
+}
+
+void clear_matrix(Matrix* matrix){
+    Node* ptr = matrix->head;
+    while(ptr != nullptr){
+        clear_list(ptr->head);
+        ptr = ptr->next;
+    }
+    clear_list(matrix->head);
+    delete matrix;
 }

@@ -50,7 +50,8 @@ T* list_copy(T* head){
         return nullptr;
     T* ptr = head;
     T* tmp;
-    tmp = new T;
+        tmp = new T;
+
     std::memcpy(tmp, ptr, sizeof(T));
     T* new_head = tmp;
     ptr = ptr->next;
@@ -66,9 +67,21 @@ T* list_copy(T* head){
 Matrix* copy_matrix(Matrix* src);
 
 void edit_matrix(Matrix* matrix);
-void edit_list(Node* node);
+int edit_list(Node* node);
 bool criterion_check(Item* item);
 
 void delete_item(Item* previous_item);
+void delete_spaces(Matrix* matrix);
+
+void clear_matrix(Matrix* matrix);
+
+template <typename T>
+void clear_list(T* head){
+    while(head != nullptr){
+        T* trash = head;
+        head = head->next;
+        delete trash;
+    }
+}
 
 #endif
