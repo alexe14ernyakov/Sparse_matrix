@@ -6,6 +6,7 @@ int main(){                               /// обработка исключе�
     print_matrix(matrix);
     std::cout << std::endl;
     Matrix* new_matrix = copy_matrix(matrix);
+    edit_matrix(new_matrix);
     print_matrix(new_matrix);
     return 0;
 }
@@ -55,8 +56,6 @@ void fill_matrix(Matrix* matrix){
     int i, j, value;
 
     while(true) {
-        std::cout << matrix->m << " " << matrix->n << std::endl;
-
         std::cout << "Enter number of line: ";
         get_int(i);
         if(i == 0)
@@ -183,4 +182,49 @@ Matrix* copy_matrix(Matrix* src){
     new_matrix->n = src->n;
     new_matrix->m = src->m;
     return new_matrix;
+}
+
+void edit_matrix(Matrix* matrix){
+    Node* ptr = matrix->head;
+    while(ptr != nullptr){
+        edit_list(ptr);
+        ptr = ptr->next;
+    }
+}
+
+void edit_list(Node* node){
+    while (criterion_check(node->head)){
+        Item* trash = node->head;
+        node->head = node->head->next;
+        delete trash;
+    }
+    Item* ptr = node->head;
+    while(ptr->next != nullptr){
+        if(criterion_check(ptr->next))
+            delete_item(ptr);
+        ptr = ptr->next;
+    }
+}
+
+bool criterion_check(Item* item){
+    if( item == nullptr)
+        return false;
+
+    int a = item->value;
+
+    while(a / 10 != 0){
+        if(a%10%2 == 1)
+            return true;
+        a = a / 10;
+    }
+    if (a % 2 == 1)
+        return true;
+    else
+        return false;
+}
+
+void delete_item(Item* previous_item){
+    Item* trash = previous_item->next;
+    previous_item->next = previous_item->next->next;
+    delete trash;
 }

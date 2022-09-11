@@ -65,4 +65,10 @@ T* list_copy(T* head){
 
 Matrix* copy_matrix(Matrix* src);
 
+void edit_matrix(Matrix* matrix);
+void edit_list(Node* node);
+bool criterion_check(Item* item);
+
+void delete_item(Item* previous_item);
+
 #endif
