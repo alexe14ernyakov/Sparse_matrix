@@ -296,7 +296,7 @@ Node* find_max(Node* head){
     Node* ptr = head;
     while(ptr != nullptr){
         if(ptr->next->amount > max->amount)
-            max = ptr->next;
+            max = ptr;
         ptr = ptr->next;
     }
     return max;
